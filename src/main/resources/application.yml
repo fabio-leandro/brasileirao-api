@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: fabio
+      database: brasileirao_db
+      port: 27017
+      host: localhost
+
+server:
+  port : 8080
+
+api:
+  version: v1/brasileirao
