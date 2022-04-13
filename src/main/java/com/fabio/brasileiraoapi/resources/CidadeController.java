@@ -35,4 +35,20 @@ public class CidadeController {
         return ResponseEntity.ok(cidadeRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Cidade>> getById(@PathVariable String id){
+        return cidadeRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/estados")
+    public ResponseEntity<Flux<Cidade>> getCidadeByEstado(@RequestParam(value = "sigla") String sigla){
+        return ResponseEntity.ok(cidadeRepository.findCidadeByEstadoSigla(sigla));
+    }
+
+
+
+
+
 }
