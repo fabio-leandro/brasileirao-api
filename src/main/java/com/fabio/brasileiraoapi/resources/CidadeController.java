@@ -47,8 +47,31 @@ public class CidadeController {
         return ResponseEntity.ok(cidadeRepository.findCidadeByEstadoSigla(sigla));
     }
 
+    @GetMapping("/nomeCidade")
+    public Mono<ResponseEntity<Cidade>> getByNome(@RequestParam(value = "nomeCidade") String nomeCidade){
+        return cidadeRepository.findByNome(nomeCidade)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Cidade>> update(@PathVariable String id, @RequestBody Cidade cidade){
+        return cidadeRepository.findById(id)
+                .flatMap(c ->{
+                    c.setNome(cidade.getNome());
+                    return cidadeRepository.save(c);
+                })
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Object>> delete(@PathVariable String id){
+        return cidadeRepository.findById(id)
+                .flatMap( c -> cidadeRepository.deleteById(c.getId())
+                        .then(Mono.just(ResponseEntity.noContent().build())))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
 
 }
