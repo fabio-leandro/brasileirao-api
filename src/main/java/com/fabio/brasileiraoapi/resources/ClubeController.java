@@ -1,6 +1,7 @@
 package com.fabio.brasileiraoapi.resources;
 
 import com.fabio.brasileiraoapi.domains.Clube;
+import com.fabio.brasileiraoapi.dtos.ClubeDto;
 import com.fabio.brasileiraoapi.repositories.CidadeRepository;
 import com.fabio.brasileiraoapi.repositories.ClubeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/${api.version}/clubes")
@@ -37,6 +41,24 @@ public class ClubeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubeRepository.findAll());
     }
+
+    @GetMapping("/resumo")
+    public Flux<Object> getAllDto(){
+        List<ClubeDto> dtos = new ArrayList<>();
+        return clubeRepository.findAll()
+                .flatMap(c ->{
+                    dtos.add(ClubeDto.builder()
+                            .id(c.getId())
+                            .nome(c.getNome())
+                            .cidade(c.getCidade().getNome())
+                            .estado(c.getCidade().getEstado().getSigla())
+                            .divisao(c.getDivisao())
+                            .build());
+                    return Flux.just(dtos);
+                });
+    }
+
+
 
 
 
