@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ClubeDto {
+public class ClubeDtoUpdate {
 
     private String id;
     private String nome;
     private String apelido;
-    private String cidade;
-    private String estado;
     private Divisao divisao;
 }

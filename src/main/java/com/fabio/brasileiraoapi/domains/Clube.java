@@ -16,6 +16,7 @@ public class Clube {
     @Id
     private String id;
     private String nome;
+    private String apelido;
     private Cidade cidade;
     private Divisao divisao;
 

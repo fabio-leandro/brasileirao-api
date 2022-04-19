@@ -2,6 +2,7 @@ package com.fabio.brasileiraoapi.resources;
 
 import com.fabio.brasileiraoapi.domains.Clube;
 import com.fabio.brasileiraoapi.dtos.ClubeDto;
+import com.fabio.brasileiraoapi.dtos.ClubeDtoUpdate;
 import com.fabio.brasileiraoapi.repositories.CidadeRepository;
 import com.fabio.brasileiraoapi.repositories.ClubeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/${api.version}/clubes")
@@ -43,21 +41,43 @@ public class ClubeController {
     }
 
     @GetMapping("/resumo")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<Object> getAllDto(){
-        List<ClubeDto> dtos = new ArrayList<>();
         return clubeRepository.findAll()
                 .flatMap(c ->{
-                    dtos.add(ClubeDto.builder()
+                    ClubeDto clubeDto = ClubeDto.builder()
                             .id(c.getId())
                             .nome(c.getNome())
+                            .apelido(c.getApelido())
                             .cidade(c.getCidade().getNome())
                             .estado(c.getCidade().getEstado().getSigla())
                             .divisao(c.getDivisao())
-                            .build());
-                    return Flux.just(dtos);
+                            .build();
+                    return Flux.just(clubeDto);
                 });
     }
 
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<ClubeDto>> update(@PathVariable String id, @RequestBody ClubeDtoUpdate clubeDtoUpdate){
+        return clubeRepository.findById(id)
+                .flatMap(c -> {
+                    c.setNome(clubeDtoUpdate.getNome());
+                    c.setApelido(clubeDtoUpdate.getApelido());
+                    c.setDivisao(clubeDtoUpdate.getDivisao());
+                    return clubeRepository.save(c);
+                }).flatMap(c -> {
+                    ClubeDto clubeDto = ClubeDto.builder()
+                            .id(c.getId())
+                            .nome(c.getNome())
+                            .apelido(c.getApelido())
+                            .cidade(c.getCidade().getNome())
+                            .estado(c.getCidade().getEstado().getSigla())
+                            .divisao(c.getDivisao())
+                            .build();
+                    return Mono.just(clubeDto);
+                }).map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
 
 
