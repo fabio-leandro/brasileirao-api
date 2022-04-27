@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/${api.version}/clubes")
 public class ClubeController {
@@ -34,11 +36,26 @@ public class ClubeController {
 
     }
 
+    @GetMapping("/confronto")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<Clube> findAllById(@RequestParam(value = "idMandante") String idMandante,
+                                    @RequestParam(value = "idVisitante") String idVisitante){
+        return clubeRepository.findAllById(List.of(idMandante,idVisitante));
+    }
+
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Clube>> getById(@PathVariable String id){
+        return clubeRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
     @GetMapping
     public ResponseEntity<Flux<Clube>> getAll(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubeRepository.findAll());
     }
+
 
     @GetMapping("/resumo")
     @ResponseStatus(HttpStatus.OK)
@@ -79,7 +96,12 @@ public class ClubeController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-
-
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Object>> delete(@PathVariable String id){
+        return clubeRepository.findById(id)
+                .flatMap( c -> clubeRepository.deleteById(c.getId())
+                        .then(Mono.just(ResponseEntity.noContent().build())))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
 }

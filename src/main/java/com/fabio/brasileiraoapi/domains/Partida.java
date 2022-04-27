@@ -1,6 +1,7 @@
 package com.fabio.brasileiraoapi.domains;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document(collection = "partidas")
 public class Partida {
 
@@ -19,5 +21,8 @@ public class Partida {
     private LocalDate data;
     private Clube mandante;
     private Clube visitante;
-    private Tabela tabela;
+    private Integer golsMandante = 0;
+    private Integer golsVisitante = 0;
+
+
 }
