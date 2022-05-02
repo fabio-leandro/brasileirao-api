@@ -19,10 +19,10 @@ public class Partida {
     @Id
     private String id;
     private LocalDate data;
-    private Clube mandante;
-    private Clube visitante;
-    private Integer golsMandante = 0;
-    private Integer golsVisitante = 0;
+    private String mandante;
+    private String visitante;
+    private Integer golsMandante;
+    private Integer golsVisitante;
 
 
 }
