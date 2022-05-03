@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
@@ -17,16 +18,17 @@ import java.time.LocalDate;
 @Document(collection = "tabelas")
 public class Scout {
 
+    @Id
     private String id;
-    private Partida jogo;
-    private Integer temporada = LocalDate.now().getYear();
+    private Integer temporada;
     private Divisao divisao;
-    private Clube clube;
+    private String clube;
+    private Integer contJogo;
+    private Integer vitoria;
+    private Integer derrota;
+    private Integer empate;
     private Integer pontos = 0;
-    private Integer partida = 0;
-    private Integer vitoria = 0;
-    private Integer derrota = 0;
-    private Integer golsMarcados = 0;
-    private Integer golsContra = 0;
-    private Integer saldoGols = 0;
+    private Integer golsMarcados;
+    private Integer golsContra;
+    private Integer saldoGols;
 }
