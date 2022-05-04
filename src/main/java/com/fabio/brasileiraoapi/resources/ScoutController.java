@@ -24,16 +24,16 @@ public class ScoutController {
     @Autowired
     private ScoutRepository scoutRepository;
 
-    @PostMapping("/serieA")
-    public ResponseEntity<Flux<Scout>> save(@RequestBody Partida partida){
+    @PostMapping
+    public ResponseEntity<Flux<Scout>> save(@RequestParam(value ="divisao") String divisao, @RequestBody Partida partida){
         Scout scoutMandante = Scout.builder()
                 .temporada(LocalDate.now().getYear())
-                .divisao(Divisao.PRIMEIRA)
+                .divisao(Divisao.valueOf(divisao.toUpperCase()))
                 .clube(partida.getMandante())
                 .contJogo(1)
                 .vitoria(partida.getGolsMandante() > partida.getGolsVisitante() ? 1 : 0)
-                .derrota(partida.getGolsMandante() == partida.getGolsVisitante() ? 1 : 0)
-                .empate(partida.getGolsMandante() < partida.getGolsVisitante() ? 1 : 0)
+                .derrota(partida.getGolsMandante() < partida.getGolsVisitante() ? 1 : 0)
+                .empate(partida.getGolsMandante() == partida.getGolsVisitante() ? 1 : 0)
                 .golsMarcados(partida.getGolsMandante())
                 .golsContra(partida.getGolsVisitante())
                 .saldoGols(partida.getGolsMandante() - partida.getGolsVisitante())
@@ -44,7 +44,7 @@ public class ScoutController {
 
         Scout scoutVisitante = Scout.builder()
                 .temporada(LocalDate.now().getYear())
-                .divisao(Divisao.PRIMEIRA)
+                .divisao(Divisao.valueOf(divisao.toUpperCase()))
                 .clube(partida.getVisitante())
                 .contJogo(1)
                 .vitoria(partida.getGolsVisitante() > partida.getGolsMandante() ? 1 : 0)
@@ -62,9 +62,9 @@ public class ScoutController {
                 .body(scoutRepository.saveAll(List.of(scoutMandante,scoutVisitante)));
     }
 
-    @GetMapping("/serieA")
-    public ResponseEntity<Flux<Scout>> getAll(){
-        return ResponseEntity.ok(scoutRepository.findAll());
+    @GetMapping
+    public ResponseEntity<Flux<Scout>> getAll(@RequestParam(value = "divisao") String divisao){
+        return ResponseEntity.ok(scoutRepository.findAllByDivisao(divisao));
     }
 
 
