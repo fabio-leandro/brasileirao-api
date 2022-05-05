@@ -9,5 +9,15 @@
   <li>Lombok</li>
 <ul>
 
+  Funcionalidades:
+  <ul>
+    <li>CRUD de estados;</li>
+    <li>CRUD de cidades;</li>
+    <li>CRUD de clubes de futebol;</li>
+    <li>CRUD de partidas;</li>
+    <li>CRUD de scout de jogos.</li>
+  </ul>
+  
+  
 
 
