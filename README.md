@@ -7,15 +7,15 @@
   <li>Spring Boot WebFlux</li>
   <li>Spring Data Reactive MongoDb</li>
   <li>Lombok</li>
-<ul>
+</ul>
 
   Funcionalidades:
   <ul>
     <li>CRUD de estados;</li>
     <li>CRUD de cidades;</li>
-    <li>CRUD de clubes de futebol;</li>
-    <li>CRUD de partidas;</li>
-    <li>CRUD de scout de jogos.</li>
+    <li>CRUD de clubes de futebol e outras buscas especificas;</li>
+    <li>CRUD de partidas e outras buscas epecificas;</li>
+    <li>CRUD de scout de jogos e outras buscas especificas.</li>
   </ul>
   
   
