@@ -18,6 +18,12 @@ Ferramentas:
     <li>CRUD de scout de jogos e outras buscas especificas.</li>
   </ul>
   
+  Branches:
+  <ul>
+    <li>main (principal)</li>
+    <li>dev (desenvolvimento)</li>  
+  </ul>
+  
   
 
 
