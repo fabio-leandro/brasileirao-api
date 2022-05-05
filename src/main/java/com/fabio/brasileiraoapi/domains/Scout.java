@@ -31,4 +31,5 @@ public class Scout {
     private Integer golsMarcados;
     private Integer golsContra;
     private Integer saldoGols;
+    private String jogo; //concatenação do nome do mandante, mais nome do visitante e data do jogo
 }

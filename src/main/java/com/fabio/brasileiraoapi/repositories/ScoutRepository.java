@@ -7,4 +7,6 @@ import reactor.core.publisher.Flux;
 public interface ScoutRepository extends ReactiveMongoRepository<Scout, String> {
 
     Flux<Scout> findAllByDivisao(String divisao);
+    Flux<Scout> findAllByJogo(String jogo);
+    Flux<Void>  deleteAllByJogo(String jogo);
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ScoutController {
                 .golsMarcados(partida.getGolsMandante())
                 .golsContra(partida.getGolsVisitante())
                 .saldoGols(partida.getGolsMandante() - partida.getGolsVisitante())
+                .jogo(partida.getMandante()+partida.getVisitante()+partida.getData())
                 .build();
         if(scoutMandante.getVitoria() == 1) scoutMandante.setPontos(3);
         if(scoutMandante.getDerrota() == 1) scoutMandante.setPontos(0);
@@ -53,6 +55,7 @@ public class ScoutController {
                 .golsMarcados(partida.getGolsVisitante())
                 .golsContra(partida.getGolsMandante())
                 .saldoGols(partida.getGolsVisitante() - partida.getGolsMandante())
+                .jogo(partida.getMandante()+partida.getVisitante()+partida.getData())
                 .build();
         if(scoutVisitante.getVitoria() == 1) scoutVisitante.setPontos(3);
         if(scoutVisitante.getDerrota() == 1) scoutVisitante.setPontos(0);
@@ -67,6 +70,39 @@ public class ScoutController {
         return ResponseEntity.ok(scoutRepository.findAllByDivisao(divisao));
     }
 
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Scout>> getById(@PathVariable String id){
+        return scoutRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Scout>> update(@PathVariable String id, @RequestBody Scout scout){
+        return scoutRepository.findById(id)
+                .flatMap(s ->{
+                    s.setTemporada(scout.getTemporada());
+                    s.setDivisao(scout.getDivisao());
+                    s.setClube(scout.getClube());
+                    s.setContJogo(scout.getContJogo());
+                    s.setVitoria(scout.getVitoria());
+                    s.setDerrota(scout.getDerrota());
+                    s.setEmpate(scout.getEmpate());
+                    s.setGolsMarcados(scout.getGolsMarcados());
+                    s.setGolsContra(scout.getGolsContra());
+                    s.setSaldoGols(scout.getSaldoGols());
+                    return scoutRepository.save(s);
+                }).map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping
+    public Mono<ResponseEntity<Object>> delete(@RequestParam(value = "mandante") String mandante,
+                                               @RequestParam(value = "visitante") String visitante,
+                                               @RequestParam(value = "data") String data){
+        return scoutRepository.findAllByJogo(mandante+visitante+data)
+                .flatMap(s -> scoutRepository.delete(s)).then(Mono.just(ResponseEntity.noContent().build()))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
 }
